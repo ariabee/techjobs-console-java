@@ -93,7 +93,12 @@ public class TechJobs {
                 System.out.println("" + j + " - " + choices.get(choiceKeys[j]));
             }
 
-            choiceIdx = in.nextInt();
+            if (in.hasNextInt()) {
+                choiceIdx = in.nextInt();
+            } else {
+                choiceIdx = -1;
+            }
+
             in.nextLine();
 
             // Validate user's input
