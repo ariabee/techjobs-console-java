@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by LaunchCode
@@ -43,6 +44,8 @@ public class JobData {
             }
         }
 
+        // Bonus mission: sort the results
+        Collections.sort(values);
         return values;
     }
 
@@ -51,7 +54,8 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        return allJobs;
+        // Bonus mission: return a copy of all jobs, not our actual data
+        return new ArrayList<>(allJobs);
     }
 
     /**
@@ -76,13 +80,44 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
 
         return jobs;
     }
+
+    /**
+     * Search all columns for the given term
+     * Note that we can consider each job as a "row" with "columns" of different info
+     *
+     * @param valueToFind The search term to look for
+     * @return      List of all jobs with at least one field containing the value
+     */
+    public static ArrayList<HashMap<String, String>> findByValue(String valueToFind) {
+        // load data, if not already loaded. This fills up the static arrayList, allJobs
+        loadData();
+
+        // create a new empty job list to fill and return to the user
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        // loop through every job row : inside the loaded allJobs
+        for (HashMap<String, String> row : allJobs) {
+            // loop through every key/column of value/info in job row
+            for (String key : row.keySet()) {
+                String aValue = row.get(key); // get the value at (key)
+
+                if (aValue.toLowerCase().contains(valueToFind.toLowerCase())) {
+                    jobs.add(row); // add the entire job row to the job list
+
+                    break; // finding one field in a job that matches is sufficient
+                }
+            }
+        }
+        return jobs;
+    }
+
 
     /**
      * Read in data from a CSV file and store it in a list
@@ -103,7 +138,7 @@ public class JobData {
             Integer numberOfColumns = records.get(0).size();
             String[] headers = parser.getHeaderMap().keySet().toArray(new String[numberOfColumns]);
 
-            allJobs = new ArrayList<>();
+            allJobs = new ArrayList<>(); // allJobs will be an ArrayList< HashMap<String,String> >
 
             // Put the records into a more friendly format
             for (CSVRecord record : records) {
@@ -115,6 +150,8 @@ public class JobData {
 
                 allJobs.add(newJob);
             }
+
+            //System.out.println(allJobs); // Testing, REMOVE later
 
             // flag the data as loaded, so we don't do it twice
             isDataLoaded = true;

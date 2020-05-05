@@ -2,6 +2,7 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -61,7 +62,7 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -93,6 +94,7 @@ public class TechJobs {
                 System.out.println("" + j + " - " + choices.get(choiceKeys[j]));
             }
 
+            // Check that user's input is a number
             if (in.hasNextInt()) {
                 choiceIdx = in.nextInt();
             } else {
@@ -101,7 +103,7 @@ public class TechJobs {
 
             in.nextLine();
 
-            // Validate user's input
+            // Validate user's integer input
             if (choiceIdx < 0 || choiceIdx >= choiceKeys.length) {
                 System.out.println("Invalid choice. Try again.");
             } else {
@@ -116,6 +118,25 @@ public class TechJobs {
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
 
-        System.out.println("printJobs is not implemented yet");
+        // Print "no results" message and return if no jobs
+        if (someJobs.size() == 0) {
+            System.out.println("No Results");
+            return; // use 'return;' to return void and leave the method
+        }
+
+        // Print info for each HashMap job of label=info entries
+        for (HashMap<String, String> job : someJobs) {
+            String jobInfo = "\n*****\n";
+
+            // Add label and value info for each column to jobInfo String
+            for (Map.Entry<String, String> jobColumn : job.entrySet()) {
+                jobInfo += (jobColumn.getKey() + ": " + jobColumn.getValue() + "\n");
+            }
+
+            jobInfo += "*****";
+
+            System.out.println(jobInfo);
+        }
+
     }
 }
