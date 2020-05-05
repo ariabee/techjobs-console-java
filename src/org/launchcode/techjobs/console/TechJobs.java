@@ -130,8 +130,7 @@ public class TechJobs {
 
             // Add label and value info for each column to jobInfo String
             for (Map.Entry<String, String> jobColumn : job.entrySet()) {
-                jobInfo += (jobColumn.getKey() + ": " + jobColumn.getValue() + System.lineSeparator());
-                //jobInfo += (jobColumn.getKey() + ": " + jobColumn.getValue() + "\n");
+                //jobInfo += (jobColumn.getKey() + ": " + jobColumn.getValue() + "\n"); // or + System.lineSeparator()
             }
 
             jobInfo += "*****";
